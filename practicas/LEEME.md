@@ -1,8 +1,8 @@
 ## LEEME practica 1
 
 ### Autores
-  * Miguel Angel Asencio Hurtado
-  * Daniel Moncada
+  * Miguel Angel Asencio Hurtado (maasencioh@unal.edu.co)
+  * Nestor Daniel Moncada Molina (ndmoncadam@unal.edu.co)
 
 ### Metodos
   * `create`: Ingresar registro
@@ -11,9 +11,10 @@
   * `search`: Buscar registro
 
 ### Consideraciones a tener en cuenta
-  * La primera vez que se inserta un archivo se debe salir del programa para que guarde el archivo.
-  * Cuando se inserta no se pueden ver los cambios recientes, se reinicia el programa y se pueden realizar las demás operaciones.
+  * Para ejecutar un metodo debe ingresarse una letra que aparece entre []
   * La carpeta debe tener permisos para poder crear y borrar archivos.
+  * Requiere gcc para compilar, preferiblemente correr en un sistema operativo GNU/Linux
+  * Crea un archivo 'dataDogs.dat', el cual no debe ser modificado manualmente y preferiblemenete no debe ser borrado
 
 ### Licencia
 GPL

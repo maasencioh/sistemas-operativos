@@ -19,6 +19,16 @@ struct dogType {
 };
 
 /**
+ *
+ */
+void lowstr(char *s) {
+ 	char  *p;
+	for (p = s; *p != '\0'; p++) 
+		*p = (char) tolower(*p);
+}
+
+
+/**
  * Imprime el menu
  */
 void menu() {
@@ -335,10 +345,15 @@ void search() {
 		}
 
 		// busca nombre
+		char *str1, *str2;
+		str1 = malloc(sizeof(*str1));
+		str2 = malloc(sizeof(*str2));
 		while(1) {
 			err = fread(dataDogs, sizeof(*dataDogs), 1, pb);
 			if (err == 0)
 				break;
+			lowstr(dataDogs->nombre);
+			lowstr(name);
 			if (strstr(dataDogs->nombre, name) != NULL) {
 				printf("Id: %d, Nombre: %s\n", dataDogs->id, dataDogs->nombre);
 				find = 1;
@@ -353,6 +368,8 @@ void search() {
 		}
 
 		// libera memoria de puntero
+		free(str1);
+		free(str2);
 		free(dataDogs);
 		fflush(stdout);
 	}
@@ -383,7 +400,7 @@ int main(int argc, char const *argv[]) {
 		while (isspace(command));
 
 		// elige funcion a realizar
-		switch (command) {
+		switch (tolower(command)) {
 
 			// ingresar registro
 			case 'i':
