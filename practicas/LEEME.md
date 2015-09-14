@@ -1,5 +1,7 @@
 ## LEEME practica 1
 
+Septiembre 14 de 2015
+
 ### Autores
   * Miguel Angel Asencio Hurtado (maasencioh@unal.edu.co)
   * Nestor Daniel Moncada Molina (ndmoncadam@unal.edu.co)
