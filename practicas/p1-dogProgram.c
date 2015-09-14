@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <string.h>
 
 #define FILE_NAME "dataDogs.dat"
 
@@ -203,6 +204,7 @@ void list() {
 		}
 
 		// libera memoria de puntero
+		free(id);
 		free(dataDogs);
 		fflush(stdout);
 	}
@@ -295,6 +297,69 @@ void erase() {
 }
 
 /**
+ * Buscar registro.
+ * Solicita una cadena de caracteres a buscar en los campos nombre de los registros.
+ * Muestra todos los registros que coincidan completamente con el nombre.
+ * No se distingue mayúsculas de minúsculas.
+ */
+void search() {
+	// abre el archivo
+	size_t err;
+	int find = 0;
+	struct dogType *dataDogs;
+	dataDogs = malloc(sizeof(*dataDogs));
+	FILE *pa = fopen(FILE_NAME, "r");
+	if (pa == NULL)
+		printf("El archivo no existe");
+	else {
+		// solicita el nombre
+		char name[32];
+		printf("\nSeleccione el nombre: ");
+		if (scanf("%s", name) < 0) {
+			perror("Couldn't read the string");
+			exit(-1);
+		}
+
+		// abre el archivo
+		FILE *pb = fopen(FILE_NAME, "r");
+		if (pb == NULL) {
+			perror("Couldn't open the file");
+			exit(-1);
+		}
+
+		// busca nombre
+		while(1) {
+			err = fread(dataDogs, sizeof(*dataDogs), 1, pb);
+			if (err == 0)
+				break;
+			if (strstr(dataDogs->nombre, name) != NULL) {
+				printf("Id: %d, Nombre: %s\n", dataDogs->id, dataDogs->nombre);
+				find = 1;
+			}
+		}
+		if ((feof(pb) == 0)) {
+			perror("Couldn't list the file");
+			exit(-1);
+		}
+		if (find == 0) {
+			printf("Nombre no encontrado\n");
+		}
+
+		// libera memoria de puntero
+		free(dataDogs);
+		fflush(stdout);
+	}
+
+	// cierra el archivo
+	err = fclose(pa);
+	if (err != 0) {
+		perror("Couldn't close the file");
+		exit(-1);
+	}
+	fflush(stdout);
+}
+
+/**
  * Funcion principal
  */
 int main(int argc, char const *argv[]) {
@@ -330,6 +395,7 @@ int main(int argc, char const *argv[]) {
 
 			// buscar registro
 			case 'u':
+				search();
 				break;
 
 			// salir
