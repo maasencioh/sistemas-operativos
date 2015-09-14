@@ -137,7 +137,7 @@ void create() {
 /**
  * Ver registro:
  * Al ingresar muestra el numero de registros presentes
- *     y solicita el numero del registro a ver.
+ * y solicita el numero del registro a ver.
  * Verifica que el numero sea valido.
  */
 void list() {
@@ -217,6 +217,84 @@ void list() {
 }
 
 /**
+ * Borrar registro:
+ * Al ingresar muestra el número de registros presentes y
+ * solicita el número del registro a borrar.
+ * El registro es borrado del archivo,
+ * por lo que el archivo debe reducir su tamaño.
+ */
+void erase() {
+	unsigned int valorEliminar;
+	const char *tmpName = "result.dat";
+	printf("\nSeleccione el id: ");
+	if (scanf("%u", &valorEliminar) < 0) {
+		perror("Couldn't read the string");
+		exit(-1);
+	}
+	
+	FILE *pf, *pfResult;
+	int encontrado = 0;
+	struct dogType *dataDogs;
+	dataDogs = malloc(sizeof(*dataDogs));
+	size_t err;
+
+	// Abrir el archivo en modo actualización
+	pf = fopen(FILE_NAME, "r");
+	if (pf == NULL) {
+		perror(FILE_NAME);
+		exit(1);
+	}
+
+	// Crear un segundo archivo
+	pfResult = fopen(tmpName, "w");
+	if (pfResult == NULL) {
+		perror("temp.dat");
+		exit(1);
+	}
+
+	// Reescribir los elementos, excepto el buscado
+	int count = 0;
+	do {
+		err = fread(dataDogs, sizeof(*dataDogs), 1, pf);
+		if ((dataDogs->id != valorEliminar) && (err != 0)) {
+			err = fwrite(dataDogs, sizeof(*dataDogs), 1, pfResult);
+			if (err == -1) {
+				perror("Couldn't write in the file");
+				exit(-1);
+			}
+		}
+		else if (dataDogs->id == valorEliminar)
+			encontrado = 1;
+	}
+	while (err != 0);
+	if (feof(pf) == 0) {
+		perror("Couldn't read the file");
+		exit(-1);
+	}
+
+	free(dataDogs);
+	fclose(pf);
+	fclose(pfResult);
+
+	if (encontrado) {
+		err = rename(tmpName, FILE_NAME);
+		if (err == -1) {
+			perror("Couldn't delete the file");
+			exit(-1);
+		}
+		printf("El elemento ha sido borrado\n");
+	}
+	else {
+		err = remove(tmpName);
+		if (err == -1) {
+			perror("Couldn't delete the file");
+			exit(-1);
+		}
+		printf("Elemento no encontrado\n");
+	}
+}
+
+/**
  * Funcion principal
  */
 int main(int argc, char const *argv[]) {
@@ -247,6 +325,7 @@ int main(int argc, char const *argv[]) {
 
 			// borrar registro
 			case 'o':
+				erase();
 				break;
 
 			// buscar registro
