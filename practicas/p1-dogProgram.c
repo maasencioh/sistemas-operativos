@@ -129,6 +129,13 @@ void create() {
 		exit(-1);
 	}
 
+	// cierra el archivo
+	err = fclose(pb);
+	if (err != 0) {
+		perror("Couldn't close the file");
+		exit(-1);
+	}
+
 	// libera memoria de puntero
 	printf("\nDatos guardados con id: %d\n", dog->id);
 	free(dog);

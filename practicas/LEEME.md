@@ -1,5 +1,9 @@
 ## LEEME practica 1
 
+### Autores
+  * Miguel Angel Asencio Hurtado
+  * Daniel Moncada
+
 ### Metodos
   * `create`: Ingresar registro
   * `list`: Ver registro
