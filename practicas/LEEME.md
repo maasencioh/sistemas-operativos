@@ -13,7 +13,7 @@ Septiembre 14 de 2015
   * `search`: Buscar registro
 
 ### Consideraciones a tener en cuenta
-  * Para ejecutar un metodo debe ingresarse una letra que aparece entre []
+  * Para ejecutar un metodo debe ingresarse una letra que aparece entre [ ]
   * La carpeta debe tener permisos para poder crear y borrar archivos.
   * Requiere gcc para compilar, preferiblemente correr en un sistema operativo GNU/Linux
   * Crea un archivo 'dataDogs.dat', el cual no debe ser modificado manualmente y preferiblemenete no debe ser borrado
