@@ -1,15 +1,11 @@
+#!/bin/sh
+
 gcc shared.c -o shared.o
-time ./shared.o 1000
+
+for i in 1000 10000 100000 1000000 10000000 100000000 1000000000; do
+	time ./shared.o $i
+	if [[ $? = 0 ]]; then
+		ipcrm -M 0x6060
+	fi
 echo " "
-time ./shared.o 10000
-echo " "
-#time ./shared.o 100000
-#echo " "
-#time ./shared.o 1000000
-#echo " "
-#time ./shared.o 10000000
-#echo " "
-#time ./shared.o 100000000
-#echo " "
-#time ./shared.o 1000000000
-#echo " "
+done

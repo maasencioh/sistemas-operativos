@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <unistd.h>
@@ -9,16 +10,16 @@ int main(int argc, char **argv) {
 
 	// read the size to work with
 	if (argc != 2) {
-		perror("Sould be ./shared.o <size>");
+		perror("Should be ./shared.o <size>");
 		exit(-1);
 	}
-	size_t size = (size_t) strtol(argv[1], NULL, 10);
-	printf(">> Size: %zu\n", size);
+	int size = (int) strtol(argv[1], NULL, 10);
+	printf(">> Size: %d\n", size);
 
 	// variable definition
 	int id, r;
 	char *ap;
-	key_t key = ftok("share.txt", 'R');
+	key_t key = 0x6060;//ftok("share.txt", 'R');
 	pid_t pid;
 
 	// creates shared memory identifier
@@ -51,7 +52,6 @@ int main(int argc, char **argv) {
 			}
 			cond = !cond;
 		}
-		printf("%lu \n", sizeof(*ap));
 	}
 
 	// parent
