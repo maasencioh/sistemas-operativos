@@ -3,22 +3,34 @@
 #include <sys/shm.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <inttypes.h>
 
-int main() {
-	int a = 16, id, r, *ap;
-	key_t key = 321;
+int main(int argc, char **argv) {
+
+	// read the size to work with
+	if (argc != 2) {
+		perror("Sould be ./shared.o <size>");
+		exit(-1);
+	}
+	size_t size = (size_t) strtol(argv[1], NULL, 10);
+	printf(">> Size: %zu\n", size);
+
+	// variable definition
+	int id, r;
+	char *ap;
+	key_t key = ftok("share.txt", 'R');
 	pid_t pid;
 
 	// creates shared memory identifier
-	id = shmget(key, sizeof(int), IPC_CREAT|0666);
+	id = shmget(key, (sizeof(char) * size), IPC_CREAT|0666);
 	if (id == -1) {
 		perror("Unable to create memory space");
 		exit(-1);
 	}
 
 	// maps the shared memory segment
-	ap = shmat(id, (void*)NULL, 0);
-	if (*ap == -1) {
+	ap = shmat(id, 0, 0);
+	if (ap ==  (char*)-1) {
 		perror("Unable to map memory space");
 		exit(-1);
 	}
@@ -32,12 +44,21 @@ int main() {
 
 	// child
 	if (pid == 0) {
-		printf("%i \n", *ap);
+		int cond = 0;
+		while(!cond) {
+			for (int i = 0; i < size; ++i) {
+				cond = cond || (ap[i] != 'a');
+			}
+			cond = !cond;
+		}
+		printf("%lu \n", sizeof(*ap));
 	}
 
 	// parent
 	else {
-		*ap = 16;
+		for (int i = 0; i < size; ++i) {
+			ap[i] = 'a';
+		}
 	}
 
 	// unmaps the shared memory segment
