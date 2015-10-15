@@ -4,8 +4,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-int main(){
-
+int main() {
 	int a=16,id,r,*ap;
 	key_t key=321;
 	pid_t pid;
