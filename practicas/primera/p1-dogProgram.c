@@ -19,11 +19,11 @@ struct dogType {
 };
 
 /**
- *
+ * Cast string to lower
  */
 void lowstr(char *s) {
  	char  *p;
-	for (p = s; *p != '\0'; p++) 
+	for (p = s; *p != '\0'; p++)
 		*p = (char) tolower(*p);
 }
 
@@ -250,7 +250,7 @@ void erase() {
 		perror("Couldn't read the string");
 		exit(-1);
 	}
-	
+
 	FILE *pf, *pfResult;
 	int encontrado = 0;
 	struct dogType *dataDogs;
