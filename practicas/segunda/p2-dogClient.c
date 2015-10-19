@@ -48,12 +48,14 @@ int main(int argc, char *argv[]) {
     int clientfd, r;
     struct sockaddr_in client;
     struct hostent *he;
-    char buffer[32];
+    char char_buffer[32];
+    int int_buffer[1];
+    double double_buffer[1];
 
     // abre el socket
     clientfd = socket(AF_INET, SOCK_STREAM, 0);
     if(clientfd < 0) {
-        perror("\n-->Error en socket():");
+        perror("Couldn't socket()");
         exit(-1);
     }
     client.sin_family = AF_INET;
@@ -63,14 +65,14 @@ int main(int argc, char *argv[]) {
     // conecta al servidor
     r = connect(clientfd, (struct sockaddr *)&client, (socklen_t)sizeof(struct sockaddr));
     if(r < 0) {
-        perror("\n-->Error en connect(): ");
+        perror("Couldn't connect()");
         exit(-1);
     }
 
     // espera coneccion
-    r = recv(clientfd, buffer, 32, 0);
-    buffer[r] = 0;
-    printf("Coneccion: %s\n", buffer);
+    r = recv(clientfd, char_buffer, 32, 0);
+    char_buffer[r] = 0;
+    printf("Coneccion: %s\n", char_buffer);
 
     // menu loop
     char command = 'x';
@@ -92,7 +94,7 @@ int main(int argc, char *argv[]) {
 			case 'i':
                 r = send(clientfd, "i", 1, 0);
                 if(r < 0) {
-                    perror("\n-->Error en send(): ");
+                    perror("Couldn't send()");
                     exit(-1);
                 }
 				create();
@@ -102,7 +104,7 @@ int main(int argc, char *argv[]) {
 			case 'v':
                 r = send(clientfd, "v", 1, 0);
                 if(r < 0) {
-                    perror("\n-->Error en send(): ");
+                    perror("Couldn't send()");
                     exit(-1);
                 }
 				list();
@@ -112,7 +114,7 @@ int main(int argc, char *argv[]) {
 			case 'o':
                 r = send(clientfd, "o", 1, 0);
                 if(r < 0) {
-                    perror("\n-->Error en send(): ");
+                    perror("Couldn't send()");
                     exit(-1);
                 }
 				erase();
@@ -122,7 +124,7 @@ int main(int argc, char *argv[]) {
 			case 'u':
                 r = send(clientfd, "u", 1, 0);
                 if(r < 0) {
-                    perror("\n-->Error en send(): ");
+                    perror("Couldn't send()");
                     exit(-1);
                 }
 				search();
@@ -135,7 +137,7 @@ int main(int argc, char *argv[]) {
                 // apaga el servidor
                 r = send(clientfd, "c", 1, 0);
                 if(r < 0) {
-                    perror("\n-->Error en send(): ");
+                    perror("Couldn't send()");
                     exit(-1);
                 }
 
