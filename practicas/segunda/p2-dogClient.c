@@ -33,7 +33,53 @@ void lowstr(char *s) {
 		*p = (char) tolower(*p);
 }
 
-struct dogType* create() {}
+struct dogType* create() {
+	// crea puntero
+	struct dogType *dog;
+
+	// asigna espacio de memoria
+	dog = malloc(sizeof(*dog));
+
+	// llena los campos
+	printf("Ingrese el nombre: ");
+	if (scanf("%s", dog->nombre) < 0) {
+		perror("Couldn't read the string");
+		exit(-1);
+	}
+
+	printf("Ingrese la edad: ");
+	if (scanf("%u", &(dog->edad)) < 0) {
+		perror("Couldn't read the string");
+		exit(-1);
+	}
+
+	printf("Ingrese la raza: ");
+	if (scanf("%s", dog->raza) < 0) {
+		perror("Couldn't read the string");
+		exit(-1);
+	}
+
+	printf("Ingrese la estatura: ");
+	if (scanf("%u", &(dog->estatura)) < 0) {
+		perror("Couldn't read the string");
+		exit(-1);
+	}
+
+	printf("Ingrese el peso: ");
+	if (scanf("%lf", &(dog->peso)) < 0) {
+		perror("Couldn't read the string");
+		exit(-1);
+	}
+
+	printf("Ingrese el sexo[m/f]: ");
+	if (scanf(" %c", &(dog->sexo)) < 0) {
+		perror("Couldn't read the string");
+		exit(-1);
+	}
+
+	dog->id = -1;
+	return dog;
+}
 
 void list() {}
 
@@ -97,7 +143,30 @@ int main(int argc, char *argv[]) {
                     perror("Couldn't send()");
                     exit(-1);
                 }
+
+				// espera confirmacion
+				r = recv(clientfd, char_buffer, 32, 0);
+                if(r < 0) {
+                    perror("Couldn't send()");
+                    exit(-1);
+                }
+				printf("Server ready: %s\n", char_buffer);
+
+				// envia datos
 				dog = create();
+				r = send(clientfd, dog, sizeof(*dog), 0);
+                if(r < 0) {
+                    perror("Couldn't send()");
+                    exit(-1);
+                }
+
+				// recibe confirmacion
+				r = recv(clientfd, char_buffer, 32, 0);
+                if(r < 0) {
+                    perror("Couldn't send()");
+                    exit(-1);
+                }
+				printf("Created ID: %s\n", char_buffer);
 				break;
 
 			// ver registro

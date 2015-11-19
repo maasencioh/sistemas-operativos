@@ -14,9 +14,83 @@
 #define FILE_NAME "dataDogs.dat"
 #define LOG_NAME "serverDogs.log"
 
-char* create() {
+/**
+ * Definicion estructura
+ */
+struct dogType {
+	int id;
+	char nombre [32];
+	int edad;
+	char raza [16];
+	int estatura;
+	double peso;
+	char sexo;
+};
+
+char* create(dog) {
     printf("create\n");
-    return "1";
+
+	// abre el archivo
+	size_t err;
+	FILE* pa = fopen(FILE_NAME, "r");
+	if (pa == NULL) {
+		pa = fopen(FILE_NAME, "w+");
+		if (pa == NULL) {
+			perror("Couldn't open the file");
+			exit(-1);
+		}
+	}
+
+	// busca el maximo id
+	struct dogType *dataDogs;
+	dataDogs = malloc(sizeof(*dataDogs));
+	size_t max_id = 0;
+	do {
+		err = fread(dataDogs, sizeof(*dataDogs), 1, pa);
+		if (dataDogs->id >= max_id)
+			max_id = dataDogs->id;
+	}
+	while (err != 0);
+	if (feof(pa) == 0) {
+		perror("Couldn't read the file");
+		exit(-1);
+	}
+	dog->id = max_id + 1;
+    char* ans;
+    sprintf(ans, "%d", max_id + 1);
+	free(dataDogs);
+
+	// cierra el archivo
+	err = fclose(pa);
+	if (err != 0) {
+		perror("Couldn't close the file");
+		exit(-1);
+	}
+
+	// abre el archivo
+	FILE* pb = fopen(FILE_NAME, "a");
+	if (pb == NULL) {
+		perror("Couldn't open the file");
+		exit(-1);
+	}
+
+	// escribir en el archivo
+	err = fwrite(dog, sizeof(*dog), 1, pb);
+	if (err == -1) {
+		perror("Couldn't write in the file");
+		exit(-1);
+	}
+
+	// cierra el archivo
+	err = fclose(pb);
+	if (err != 0) {
+		perror("Couldn't close the file");
+		exit(-1);
+	}
+
+	// libera memoria de puntero
+	fflush(stdout);
+    return ans;
 }
 
 char* list() {
@@ -93,20 +167,28 @@ int main() {
     char log_msg[80];
     time_t rawtime;
     struct tm * timeinfo;
+    struct dogType *dog;
+	char* ans_id;
     do {
+		// recibe funcion a realizar
         r = recv(clientfd, buffer, 1, 0);
+
         switch (buffer[0]) {
 			// ingresar registro
 			case 'i':
-                // escribir en el archivo
+				// envia confirmacion
+
+                // prepara el log
                 time (&rawtime);
                 timeinfo = localtime (&rawtime);
                 strftime (log_msg,80,"%F-%T Cliente ",timeinfo);
                 strcat(log_msg, addr);
                 strcat(log_msg, " insercion ");
-                strcat(log_msg, create());
+                strcat(log_msg, create(dog));
                 strcat(log_msg, "\n");
                 printf("%s\n", log_msg);
+
+				// escribe el archivo
                 err = fwrite(log_msg, sizeof(log_msg), 1, pa);
             	if (err == -1) {
             		perror("Couldn't write in the file");
