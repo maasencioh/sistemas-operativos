@@ -33,7 +33,7 @@ void lowstr(char *s) {
 		*p = (char) tolower(*p);
 }
 
-void create() {}
+struct dogType* create() {}
 
 void list() {}
 
@@ -71,7 +71,6 @@ int main(int argc, char *argv[]) {
 
     // espera coneccion
     r = recv(clientfd, char_buffer, 32, 0);
-    char_buffer[r] = 0;
     printf("Coneccion: %s\n", char_buffer);
 
     // menu loop
@@ -88,6 +87,7 @@ int main(int argc, char *argv[]) {
 		while (isspace(command));
 
 		// elige funcion a realizar
+		struct dogType* dog;
 		switch (tolower(command)) {
 
 			// ingresar registro
@@ -97,7 +97,7 @@ int main(int argc, char *argv[]) {
                     perror("Couldn't send()");
                     exit(-1);
                 }
-				create();
+				dog = create();
 				break;
 
 			// ver registro
